@@ -7,7 +7,8 @@ from evaluate import evaluate
 
 def main(args):
     if args.mode == "train":
-        train(args.config_file_path)
+        config = load_config_file(args.config_file_path)
+        train(config)
     
     elif args.mode == "evaluate":
         evaluate(args)

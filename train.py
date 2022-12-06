@@ -2,7 +2,7 @@ import torch
 from torch.optim import AdamW
 from torch.utils.tensorboard.writer import SummaryWriter
 from torch.utils.data import DataLoader
-import shutil
+import yaml
 
 from datasets.SHREC2017_Dataset import SHREC2017_Dataset
 from models.MFHAN import MFHAN
@@ -11,13 +11,12 @@ from utils.scheduler import WarmupScheduler, ReduceLROnPlateau
 from utils.misc import *
 
 
-def train(config_file_path: str) -> None:
-    config = load_config_file(config_file_path)
+def train(config) -> None:
     checkpoint_dir = use_or_create_checkpoint_dir(
         config["checkpoints_dir"], config["name"])
     print(f"\nCreated run folder \"{checkpoint_dir}\"!")
     print(f"Copying config file to \"{checkpoint_dir}\" ... ", end="")
-    shutil.copyfile(config_file_path, os.path.join(checkpoint_dir, "config.yml"))
+    yaml.dump(config, open(os.path.join(checkpoint_dir, "config.yml")))
     print("done!")
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
