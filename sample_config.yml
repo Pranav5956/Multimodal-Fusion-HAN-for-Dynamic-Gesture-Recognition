@@ -1,0 +1,70 @@
+---
+num_classes: 14 # 14, 28
+num_workers: 8
+seed: 0
+
+batch_size: 32
+shuffle: true
+
+checkpoints_dir: "checkpoints/"
+name: "run3"
+
+lr_drop_threshold: 4
+
+sizes:
+  skeletons: 22
+  cropped: [50, 50]
+  uncropped: [128, 96]
+
+dataset:
+  data_dir: "datasets/HandGestureDataset_SHREC2017_Processed/"
+  images: "cropped"  # "uncropped", "cropped"
+  skeletons: "3d" # "2d", "3d"
+
+  sampling:
+    strategy: "uniform"  # "k-random", "uniform"
+    size: 8
+
+  augmentation:
+    apply: true
+    transforms:
+      p: 0.5
+      shift_limit: 0.2
+      scale_limit: 0.2
+
+model:
+  encoder:
+    variant: "patch-based"  # "patch-based" (uses attention), "roi-based" (uses CNNs)
+    input_dim: 4
+    output_dim: 128
+    patch_size: 10
+    attention:
+      input_dim: 128
+      output_dim: 128
+      num_heads: 8
+      head_dim: 32
+      dropout_prob: 0.1
+
+  HAN:
+    input_dim: 6
+    dropout_prob: 0.1
+    attention:
+      input_dim: 128
+      output_dim: 128
+      num_heads: 8
+      head_dim: 32
+      dropout_prob: 0.1
+
+optimizer:
+  lr: 0.001
+  weight_decay: 0.1
+
+scheduler:
+  warmup_epochs: 10
+  reduce_lr_on_plateau:
+    factor: 0.1
+    patience: 30
+    threshold: 0.0001
+
+loss:
+  label_smoothing: 0.1

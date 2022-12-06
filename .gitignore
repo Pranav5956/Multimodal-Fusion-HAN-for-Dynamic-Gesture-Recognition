@@ -1,0 +1,4 @@
+**/__pycache__
+/checkpoints
+/datasets/HandGestureDataset_SHREC2017_Processed
+config.yml
